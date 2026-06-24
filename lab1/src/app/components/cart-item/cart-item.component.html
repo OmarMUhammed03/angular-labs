@@ -1,0 +1,31 @@
+<div class="cart-item" role="listitem">
+  <img
+    [src]="item().product.images[0]"
+    [alt]="item().product.title"
+    class="cart-item__image"
+  />
+  <div class="cart-item__details">
+    <p class="cart-item__title">{{ item().product.title }}</p>
+    <p class="cart-item__price">{{ item().product.price | currency }}</p>
+    <div class="cart-item__qty" role="group" [attr.aria-label]="'Quantity for ' + item().product.title">
+      <button
+        class="qty-btn"
+        (click)="quantityChange.emit(item().quantity - 1)"
+        [attr.aria-label]="'Decrease quantity of ' + item().product.title"
+      >−</button>
+      <span class="qty-value" aria-live="polite">{{ item().quantity }}</span>
+      <button
+        class="qty-btn"
+        (click)="quantityChange.emit(item().quantity + 1)"
+        [attr.aria-label]="'Increase quantity of ' + item().product.title"
+      >+</button>
+    </div>
+  </div>
+  <button
+    class="cart-item__remove"
+    (click)="remove.emit()"
+    [attr.aria-label]="'Remove ' + item().product.title + ' from cart'"
+  >
+    ✕
+  </button>
+</div>

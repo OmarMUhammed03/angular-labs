@@ -1,0 +1,52 @@
+@if (isOpen()) {
+  <div
+    class="cart-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Shopping cart"
+    (click)="onOverlayClick($event)"
+    (keydown)="onKeydown($event)"
+    tabindex="-1"
+  >
+    <aside class="cart-sidebar">
+      <div class="cart-sidebar__header">
+        <h2 class="cart-sidebar__title">Your Cart</h2>
+        <button
+          class="cart-sidebar__close"
+          (click)="close.emit()"
+          aria-label="Close cart"
+        >✕</button>
+      </div>
+
+      <div class="cart-sidebar__body" role="list">
+        @if (isEmpty()) {
+          <div class="cart-empty">
+            <span class="cart-empty__icon" aria-hidden="true">🛒</span>
+            <p>Your cart is empty</p>
+          </div>
+        } @else {
+          @for (item of items(); track item.product.id) {
+            <app-cart-item
+              [item]="item"
+              (quantityChange)="onQuantityChange(item.product.id, $event)"
+              (remove)="onRemove(item.product.id)"
+            />
+          }
+        }
+      </div>
+
+      @if (!isEmpty()) {
+        <div class="cart-sidebar__footer">
+          <div class="cart-total">
+            <span>Total</span>
+            <span class="cart-total__amount">{{ totalPrice() | currency }}</span>
+          </div>
+          <button class="btn-checkout" (click)="onClear()" aria-label="Proceed to checkout">
+            Checkout
+          </button>
+          <button class="btn-clear" (click)="onClear()">Clear Cart</button>
+        </div>
+      }
+    </aside>
+  </div>
+}

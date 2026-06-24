@@ -1,0 +1,28 @@
+<article class="product-card">
+  <div class="product-card__image-wrap">
+    <img
+      [src]="getImage()"
+      [alt]="product().title"
+      class="product-card__image"
+      loading="lazy"
+      (error)="$any($event.target).src='https://placehold.co/400x300?text=No+Image'"
+    />
+    <span class="product-card__category">{{ product().category.name }}</span>
+  </div>
+
+  <div class="product-card__body">
+    <h3 class="product-card__title" [title]="product().title">{{ product().title }}</h3>
+    <p class="product-card__desc">{{ product().description }}</p>
+
+    <div class="product-card__footer">
+      <span class="product-card__price">{{ product().price | currency }}</span>
+      <button
+        class="product-card__add-btn"
+        (click)="addToCart.emit(product())"
+        [attr.aria-label]="'Add ' + product().title + ' to cart'"
+      >
+        + Add to Cart
+      </button>
+    </div>
+  </div>
+</article>
