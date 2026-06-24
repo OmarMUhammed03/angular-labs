@@ -1,0 +1,38 @@
+<article class="product-card" [class.product-card--in-cart]="inCart()">
+  <div class="product-card__image-wrap">
+    <img
+      [src]="imageUrl()"
+      [alt]="product().title"
+      class="product-card__image"
+      loading="lazy"
+      (error)="$any($event.target).src='https://placehold.co/400x300?text=No+Image'"
+    />
+    <span class="product-card__category">{{ product().category.name }}</span>
+
+    @if (inCart()) {
+      <span class="product-card__in-cart-badge" aria-label="Already in cart">
+        🛒 In Cart
+      </span>
+    }
+  </div>
+
+  <div class="product-card__body">
+    <h3 class="product-card__title" [title]="product().title">
+      {{ product().title }}
+    </h3>
+    <p class="product-card__desc">{{ product().description }}</p>
+
+    <div class="product-card__footer">
+      <span class="product-card__price">{{ product().price | currency }}</span>
+      <button
+        class="product-card__add-btn"
+        [class.product-card__add-btn--added]="justAdded()"
+        [class.product-card__add-btn--in-cart]="inCart() && !justAdded()"
+        (click)="addToCart.emit(product())"
+        [attr.aria-label]="btnLabel() + ' — ' + product().title"
+      >
+        {{ btnLabel() }}
+      </button>
+    </div>
+  </div>
+</article>
