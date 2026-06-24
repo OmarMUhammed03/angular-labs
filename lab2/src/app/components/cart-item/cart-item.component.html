@@ -1,0 +1,59 @@
+<div class="cart-item" role="listitem">
+  <!-- Thumbnail -->
+  <img
+    [src]="imageUrl()"
+    [alt]="title()"
+    class="cart-item__image"
+    (error)="$any($event.target).src='https://placehold.co/64x64?text=?'"
+  />
+
+  <!-- Details column -->
+  <div class="cart-item__details">
+
+    <p class="cart-item__title" [title]="title()">{{ title() }}</p>
+
+    <!-- Unit price -->
+    <p class="cart-item__unit-price">
+      {{ unitPrice() | currency }}&nbsp;<span class="cart-item__unit-label">each</span>
+    </p>
+
+    <!-- Quantity: displayed as plain text (will become input in Lab 3) -->
+    <div
+      class="cart-item__qty"
+      role="group"
+      [attr.aria-label]="'Quantity for ' + title()"
+    >
+      <button
+        class="qty-btn"
+        (click)="quantityChange.emit(qty() - 1)"
+        [attr.aria-label]="'Decrease quantity of ' + title()"
+      >−</button>
+
+      <span class="qty-value" aria-live="polite" aria-atomic="true">
+        {{ qty() }}
+      </span>
+
+      <button
+        class="qty-btn"
+        (click)="quantityChange.emit(qty() + 1)"
+        [attr.aria-label]="'Increase quantity of ' + title()"
+      >+</button>
+    </div>
+
+    <!-- Per-line total -->
+    <p class="cart-item__line-total">
+      <span class="cart-item__line-label">Total:</span>
+      <span class="cart-item__line-value" aria-live="polite" aria-atomic="true">
+        {{ lineTotal() | currency }}
+      </span>
+    </p>
+
+  </div>
+
+  <!-- Remove button -->
+  <button
+    class="cart-item__remove"
+    (click)="remove.emit()"
+    [attr.aria-label]="'Remove ' + title() + ' from cart'"
+  >✕</button>
+</div>
