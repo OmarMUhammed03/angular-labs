@@ -1,0 +1,93 @@
+@if (isOpen()) {
+  <div
+    class="cart-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cart-title"
+    (click)="onOverlayClick($event)"
+    (keydown)="onKeydown($event)"
+    tabindex="-1"
+  >
+    <aside class="cart-sidebar">
+
+      <!-- ── Header ───────────────────────────────────────────── -->
+      <div class="cart-sidebar__header">
+        <h2 id="cart-title" class="cart-sidebar__title">
+          Shopping Cart
+          @if (!isEmpty()) {
+            <span
+              class="cart-sidebar__count"
+              [attr.aria-label]="totalCount() + ' items'"
+            >{{ totalCount() }}</span>
+          }
+        </h2>
+        <button
+          class="cart-sidebar__close"
+          (click)="close.emit()"
+          aria-label="Close cart"
+        >✕</button>
+      </div>
+
+      <!-- ── Items ────────────────────────────────────────────── -->
+      <div class="cart-sidebar__body" role="list" aria-label="Cart items">
+        @if (isEmpty()) {
+          <div class="cart-empty" role="status">
+            <span class="cart-empty__icon" aria-hidden="true">🛒</span>
+            <p class="cart-empty__msg">Your cart is empty</p>
+            <p class="cart-empty__hint">Add some products to get started!</p>
+          </div>
+        } @else {
+          @for (item of itemViews(); track item.product.id) {
+            <app-cart-item
+              [item]="item"
+              (quantityChange)="onQuantityChange(item.product.id, $event)"
+              (remove)="onRemove(item.product.id)"
+            />
+          }
+        }
+      </div>
+
+      <!-- ── Footer: summary + actions ────────────────────────── -->
+      @if (!isEmpty()) {
+        <div class="cart-sidebar__footer">
+
+          <div class="cart-summary" aria-label="Order summary">
+            <div class="cart-summary__row">
+              <span class="cart-summary__label">
+                Items&nbsp;<span class="cart-summary__meta">({{ lineCount() }} {{ lineCount() === 1 ? 'product' : 'products' }})</span>
+              </span>
+              <span class="cart-summary__value">{{ totalCount() }} units</span>
+            </div>
+
+            <div class="cart-summary__row">
+              <span class="cart-summary__label">Shipping</span>
+              <span class="cart-summary__value cart-summary__value--free">Free</span>
+            </div>
+
+            <div class="cart-summary__divider" role="separator"></div>
+
+            <div class="cart-summary__row cart-summary__row--grand">
+              <span class="cart-summary__label">Grand Total</span>
+              <span
+                class="cart-summary__value cart-summary__value--grand"
+                aria-live="polite"
+                aria-atomic="true"
+              >{{ grandTotal() | currency }}</span>
+            </div>
+          </div>
+
+          <button
+            class="btn-checkout"
+            (click)="onClear()"
+            aria-label="Proceed to checkout"
+          >Checkout</button>
+
+          <button class="btn-clear" (click)="onClear()">
+            Clear Cart
+          </button>
+        </div>
+      }
+
+    </aside>
+  </div>
+}

@@ -1,0 +1,146 @@
+<div class="product-form">
+  <div class="product-form__container">
+    <h1 class="product-form__title">
+      {{ isEditMode() ? 'Edit Product' : 'Add New Product' }}
+    </h1>
+
+    @if (submitSuccess()) {
+      <div class="alert alert--success" role="alert">
+        <span class="alert__icon">✓</span>
+        <span class="alert__text">
+          {{ isEditMode() ? 'Product updated successfully!' : 'Product created successfully!' }}
+        </span>
+      </div>
+    }
+
+    @if (submitError()) {
+      <div class="alert alert--error" role="alert">
+        <span class="alert__icon">✕</span>
+        <span class="alert__text">{{ submitError() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form__form">
+
+      <!-- Title field -->
+      <div class="form-group">
+        <label for="title" class="form-label">Product Title *</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          class="form-input"
+          placeholder="Enter product title"
+          [attr.aria-invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+          aria-describedby="error-title"
+        />
+        @if (form.get('title')?.hasError('required') && form.get('title')?.touched) {
+          <span id="error-title" class="form-error" role="alert">Title is required</span>
+        }
+        @if (form.get('title')?.hasError('minlength') && form.get('title')?.touched) {
+          <span id="error-title" class="form-error" role="alert">Title must be at least 3 characters</span>
+        }
+      </div>
+
+      <!-- Price field -->
+      <div class="form-group">
+        <label for="price" class="form-label">Price ($) *</label>
+        <input
+          id="price"
+          type="number"
+          formControlName="price"
+          class="form-input"
+          placeholder="0.00"
+          step="0.01"
+          min="0"
+          [attr.aria-invalid]="form.get('price')?.invalid && form.get('price')?.touched"
+          aria-describedby="error-price"
+        />
+        @if (form.get('price')?.hasError('required') && form.get('price')?.touched) {
+          <span id="error-price" class="form-error" role="alert">Price is required</span>
+        }
+        @if (form.get('price')?.hasError('min') && form.get('price')?.touched) {
+          <span id="error-price" class="form-error" role="alert">Price must be greater than 0</span>
+        }
+      </div>
+
+      <!-- Category field -->
+      <div class="form-group">
+        <label for="category" class="form-label">Category *</label>
+        <input
+          id="category"
+          type="text"
+          formControlName="categoryName"
+          class="form-input"
+          placeholder="e.g., Electronics, Clothing"
+          [attr.aria-invalid]="form.get('categoryName')?.invalid && form.get('categoryName')?.touched"
+          aria-describedby="error-category"
+        />
+        @if (form.get('categoryName')?.hasError('required') && form.get('categoryName')?.touched) {
+          <span id="error-category" class="form-error" role="alert">Category is required</span>
+        }
+      </div>
+
+      <!-- Description field -->
+      <div class="form-group">
+        <label for="description" class="form-label">Description *</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-textarea"
+          placeholder="Enter product description"
+          rows="6"
+          [attr.aria-invalid]="form.get('description')?.invalid && form.get('description')?.touched"
+          aria-describedby="error-description"
+        ></textarea>
+        @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
+          <span id="error-description" class="form-error" role="alert">Description is required</span>
+        }
+        @if (form.get('description')?.hasError('minlength') && form.get('description')?.touched) {
+          <span id="error-description" class="form-error" role="alert">Description must be at least 10 characters</span>
+        }
+      </div>
+
+      <!-- Image URL field -->
+      <div class="form-group">
+        <label for="images" class="form-label">Product Image URL</label>
+        <input
+          id="images"
+          type="url"
+          formControlName="images"
+          class="form-input"
+          placeholder="https://example.com/image.jpg"
+        />
+      </div>
+
+      <!-- Form actions -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="!form.valid || isSubmitting()"
+          [attr.aria-busy]="isSubmitting()"
+          [attr.aria-label]="isSubmitting() ? 'Saving...' : (isEditMode() ? 'Update product' : 'Create new product')"
+        >
+          @if (isSubmitting()) {
+            <span class="btn-loading">
+              <span class="btn-spinner"></span>
+              Saving...
+            </span>
+          } @else {
+            {{ isEditMode() ? 'Update Product' : 'Add Product' }}
+          }
+        </button>
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="onCancel()"
+          [disabled]="isSubmitting()"
+        >
+          Cancel
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
