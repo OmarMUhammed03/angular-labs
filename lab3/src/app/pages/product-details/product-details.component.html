@@ -1,0 +1,111 @@
+<div class="product-details">
+  <!-- Loading state using custom *appUnless directive -->
+  <div class="loading-overlay" *appUnless="isLoading()">
+    <div class="spinner" role="status" aria-label="Loading product details">
+      <div class="spinner-ring"></div>
+      <span class="spinner-text">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Product content (shown when NOT loading) -->
+  <div class="product-details__container" *appUnless="!isLoading()">
+    <button
+      class="btn-back"
+      (click)="onGoBack()"
+      aria-label="Go back to products"
+    >
+      ← Back to Products
+    </button>
+
+    <div class="product-details__content">
+
+      <!-- Left: Image gallery -->
+      <div class="product-details__images">
+        <div class="product-details__main-image">
+          <img
+            [src]="imageUrl()"
+            [alt]="currentProduct()?.title ?? 'Product'"
+            class="main-image"
+            (error)="$any($event.target).src='https://placehold.co/600x400?text=Product'"
+          />
+          @if (currentProduct()?.images && currentProduct()!.images.length > 1) {
+            <div class="product-details__thumbnails">
+              @for (img of currentProduct()!.images; track $index; let i = $index) {
+                <img
+                  [src]="cleanImageUrl(img)"
+                  [alt]="'Product thumbnail ' + (i + 1)"
+                  class="thumbnail"
+                  (error)="$any($event.target).src='https://placehold.co/80x80?text=?'"
+                />
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right: Product info -->
+      <div class="product-details__info">
+
+        <!-- Category badge with highlight directive -->
+        <span
+          class="product-category"
+          appHighlight
+          appHighlightColor="#e0e7ff"
+          [attr.aria-label]="'Category: ' + currentProduct()?.category.name"
+        >
+          {{ currentProduct()?.category.name }}
+        </span>
+
+        <!-- Title -->
+        <h1 class="product-details__title">
+          {{ currentProduct()?.title }}
+        </h1>
+
+        <!-- Price (using custom currency pipe) -->
+        <div class="product-details__price">
+          <span class="price-label">Price:</span>
+          <span class="price-value">
+            {{ currentProduct()?.price | currencyFormat:'$':2 }}
+          </span>
+        </div>
+
+        <!-- Rating (mock) -->
+        <div class="product-details__rating">
+          <span class="stars" aria-label="4.5 out of 5 stars">
+            ★★★★☆ (4.5)
+          </span>
+        </div>
+
+        <!-- Description -->
+        <div class="product-details__description">
+          <h3>Description</h3>
+          <p>{{ currentProduct()?.description }}</p>
+        </div>
+
+        <!-- Stock status (attribute binding) -->
+        <div
+          class="stock-status"
+          [attr.data-stock]="true"
+          [attr.aria-live]="'polite'"
+        >
+          <span class="stock-badge">✓ In Stock</span>
+        </div>
+
+        <!-- Add to cart button -->
+        <div class="product-details__actions">
+          <button
+            class="btn-add-to-cart"
+            [class.btn-add-to-cart--added]="justAdded()"
+            (click)="onAddToCart()"
+            [attr.aria-label]="'Add ' + currentProduct()?.title + ' to cart'"
+          >
+            {{ justAdded() ? '✓ Added to Cart!' : '+ Add to Cart' }}
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

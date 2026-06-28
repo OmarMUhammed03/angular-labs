@@ -1,0 +1,36 @@
+<header class="header" role="banner">
+  <div class="header__inner">
+    <a [routerLink]="['/']" class="header__logo" aria-label="Shop home">
+      <span class="header__logo-icon" aria-hidden="true">🛍</span>
+      <span class="header__logo-text">ShopWave</span>
+    </a>
+
+    <nav class="header__nav" aria-label="Main navigation">
+      <a [routerLink]="['/products']" class="header__nav-link">Products</a>
+      <a [routerLink]="['/product/add']" class="header__nav-link header__nav-link--add">
+        + Add Product
+      </a>
+    </nav>
+
+    <button
+      class="header__cart-btn"
+      (click)="toggleCart()"
+      [attr.aria-expanded]="isCartOpen()"
+      aria-label="Open shopping cart"
+      aria-haspopup="dialog"
+    >
+      <span class="header__cart-icon" aria-hidden="true">🛒</span>
+      @if (cartCount() > 0) {
+        <span class="header__cart-badge" aria-live="polite" aria-atomic="true">
+          {{ cartCount() }}
+        </span>
+      }
+      <span class="header__cart-label">Cart</span>
+    </button>
+  </div>
+</header>
+
+<app-cart-sidebar
+  [isOpen]="isCartOpen()"
+  (close)="closeCart()"
+/>
